@@ -81,9 +81,65 @@ partes_cuerpo = [
     pierna_derecho,
 ]
 
-horca()
 
-for parte in partes_cuerpo:
-    parte()
+def palabra_usuario():
+    print("=== JUEGO DEL AHORCADO ===")
+    palabra = input("Escribe una palabra cualquiera: ").strip().lower()
 
+
+    print("\n" * 30)
+    return palabra
+
+
+def mostrar_progreso(palabra, adivinadas):
+    resultado = []
+
+    for letra in palabra:
+        if letra in adivinadas:
+            resultado.append(letra)
+        else:
+            resultado.append("_")
+
+    return " ".join(resultado)
+
+
+def jugar():
+    palabra = palabra_usuario()
+    horca()
+
+    adivinadas = set()
+    falladas = set()
+    fallos = 0
+    max_fallos = len(partes_cuerpo)
+
+    while fallos < max_fallos:
+        print("\nPalabra:", mostrar_progreso(palabra, adivinadas))
+        print(f"Fallos: {fallos}/{max_fallos}", sorted(falladas))
+
+        letra = input("Adivina una letra: ").strip().lower()
+
+        if len(letra) != 1 or not letra.isalpha():
+            print("Escribe solo una letra.")
+            continue
+
+        if letra in adivinadas or letra in falladas:
+            print("¡Ya está! Esa letra ya la habías puesto.")
+            continue
+
+        if letra in palabra:
+            adivinadas.add(letra)
+            print("¡Bien!")
+            if all(l in adivinadas for l in palabra):
+                print(f"\n¡Ganaste! La palabra era: {palabra}")
+                break
+        else:
+            falladas.add(letra)
+            partes_cuerpo[fallos]()  
+            fallos += 1
+            print("Fallaste.")
+    else:
+        print(f"\nPerdiste. La palabra era: {palabra}")
+
+
+jugar()
 turtle.done()
