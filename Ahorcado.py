@@ -85,5 +85,5 @@ horca()
 
 for parte in partes_cuerpo:
     parte()
-    
+
 turtle.done()
